@@ -18,21 +18,21 @@ Liste_beta=[0.151, 0.119, 0.0995, 0.082, 0.0685, 0.0575, 0.0485, 0.0415, 0.0353,
 
 def calcul_a_b_Isotrope(w, g):
     """    
-    Calcule a et b, les coeficient de la matrice dans le cas isotropique
+    Calcule a et b, les coeficients de la matrice dans le cas isotrope
 
     Parameters
     ----------
     w : float
-        valeur compris entre 0 et 1 qui represent l'albedo simple.
+        valeur compris entre 0 et 1 qui represente l'albedo simple.
     g : float
-        valeur compris entre -1 et 1 qui represent le parametre d'asymetrie.
+        valeur compris entre -1 et 1 qui represente le parametre d'asymetrie.
 
     Returns
     -------
     a : float
-        valeur compris entre 0 et 1 qui corespond a des coefficient de la matice.
+        valeur compris entre 0 et 1 qui corespond a des coefficients de la matice.
     b : float
-        valeur compris entre 0 et 1 qui corespond a des coefficient de la matice.
+        valeur compris entre 0 et 1 qui corespond a des coefficients de la matice.
 
     """
     
@@ -42,26 +42,26 @@ def calcul_a_b_Isotrope(w, g):
 
 def calcul_a_b_c_d_non_Isotrope(w,g):
     """
-    Calcule a,b,c et d, les coeficient de la matrice dans le cas non-isotropique
+    Calcule a,b,c et d, les coeficient de la matrice dans le cas non-isotrope
 
     Parameters
     ----------
     w : float
-        valeur compris entre 0 et 1 qui represent l'albedo simple.
-    g : (float,float)
-        Tuple contenant p_bas,bas et p_haut,haut compris entre 0 et 1.
+        valeur compris entre 0 et 1 qui represente l'albedo simple.
+    g : float
+        valeur compris entre -1 et 1 qui represente le parametre d'asymetrie.
 
 
     Returns
     -------
     a : float
-        valeur compris entre 0 et 1 qui corespond a des coefficient de la matice.
+        valeur compris entre 0 et 1 qui corespond a des coefficients de la matice.
     b : float
-        valeur compris entre 0 et 1 qui corespond a des coefficient de la matice.
+        valeur compris entre 0 et 1 qui corespond a des coefficients de la matice.
     c : float
-        valeur compris entre 0 et 1 qui corespond a des coefficient de la matice.
+        valeur compris entre 0 et 1 qui corespond a des coefficients de la matice.
     d : float
-        valeur compris entre 0 et 1 qui corespond a des coefficient de la matice.
+        valeur compris entre 0 et 1 qui corespond a des coefficients de la matice.
 
     """
     e=g[0]
@@ -74,7 +74,7 @@ def calcul_a_b_c_d_non_Isotrope(w,g):
 
 def modelflux(tau, Fbas_Fhaut,w,g):
     """
-    Permet de calculer Fbas' et Fhaut'. Cette fonction est uniqument appeller par solve_ivp de la librairie scipy.integrate
+    Permet de calculer Fbas' et Fhaut'. Cette fonction est uniqument appelle par solve_ivp de la librairie scipy.integrate
     
     Parameters
     ----------
@@ -83,15 +83,15 @@ def modelflux(tau, Fbas_Fhaut,w,g):
     Fbas_Fhaut : tuple [float,float]
         Vecteur composer de Fbas et de Fhaut.
     w : float
-        valeur compris entre 0 et 1 qui represent l'albedo simple.
+        valeur compris entre 0 et 1 qui represente l'albedo simple.
     g : float or (float,float)
-        Soit valeur compris entre -1 et 1 qui represent le parametre d'asymetrie 
+        Soit valeur compris entre -1 et 1 qui represente le parametre d'asymetrie 
         ou un Tuple contenant p_bas,bas et p_haut,haut compris entre 0 et 1.
 
     Returns
     -------
     list : tuple [float,float]
-        Vecteur composer de Fbas' et de Fhaut'.
+        Vecteur compose de Fbas' et de Fhaut'.
 
     """
     Fbas, Fhaut= Fbas_Fhaut
@@ -105,7 +105,7 @@ def modelflux(tau, Fbas_Fhaut,w,g):
 
 def graph_des_phase(w, g, color="#1f77b4"):
     """
-    Génère le diagrame de phase 
+    Génère le portrait de phase 
 
     Parameters
     ----------
@@ -142,20 +142,20 @@ def solution_particuliere (Fbas_init, Fhaut_init, w, g, color="black", resolutio
     Parameters
     ----------
     Fbas_init : float
-        La valeur initial de Fbas. Compris entre 0 et 1.
+        La valeur initiale de Fbas. Compris entre 0 et 1.
     Fhaut_init : float
-        La valeur initial de Fhaut. Compris entre 0 et 1.
+        La valeur initiale de Fhaut. Compris entre 0 et 1.
     w : float
-        valeur compris entre 0 et 1 qui represent l'albedo simple.
+        valeur compris entre 0 et 1 qui represente l'albedo simple.
     g : float or (float,float)
-        Soit valeur compris entre -1 et 1 qui represent le parametre d'asymetrie 
+        Soit valeur compris entre -1 et 1 qui represente le parametre d'asymetrie 
         ou un Tuple contenant p_bas,bas et p_haut,haut compris entre 0 et 1.
     color: string or (float,float,float)
         un argument couleur de mathplotlib ou une valeur RVB. The default is "black".
     resolution : int, optional
         Le nombre de point qui seront tracer pour la solution particuliaire. The default is 1000.
     tau_min : int, optional
-        La valuer initial pour la derivation par tau, l'epaiseur optique. The default is 0.
+        La valuer initiale pour la derivation par tau, l'epaiseur optique. The default is 0.
     tau_max : int, optional
         La valuer final pour la derivation par tau, l'epaiseur optique. The default is 20.
 
@@ -180,20 +180,20 @@ def point_particulier(Fbas_init, Fhaut_init, w, g, tau=0, resolution=1000, tau_m
     Parameters
     ----------
     Fbas_init : float
-        La valeur initial de Fbas. Compris entre 0 et 1.
+        La valeur initiale de Fbas. Compris entre 0 et 1.
     Fhaut_init : float
-        La valeur initial de Fhaut. Compris entre 0 et 1.
+        La valeur initiale de Fhaut. Compris entre 0 et 1.
     w : float
-        valeur compris entre 0 et 1 qui represent l'albedo simple.
+        valeur compris entre 0 et 1 qui represente l'albedo simple.
     g : float or (float,float)
-        Soit valeur compris entre -1 et 1 qui represent le parametre d'asymetrie 
+        Soit valeur compris entre -1 et 1 qui represente le parametre d'asymetrie 
         ou un Tuple contenant p_bas,bas et p_haut,haut compris entre 0 et 1.
     tau : int, optional
         La valeur de tau, l'epaisseur optique, a laquelle on s'arrete. The default is 0.
     resolution : int, optional
         Le nombre de point qui seront tracer pour la solution particuliaire. The default is 1000.
     tau_min : int, optional
-        La valuer initial pour la derivation par tau, l'epaiseur optique. The default is 0.
+        La valuer initiale pour la derivation par tau, l'epaiseur optique. The default is 0.
     tau_max : int, optional
         La valuer final pour la derivation par tau, l'epaiseur optique. The default is 20.
 
@@ -216,9 +216,9 @@ def vecteur_propre(w,g,typ='r-'):
     Parameters
     ----------
     w : float
-        valeur compris entre 0 et 1 qui represent l'albedo simple.
+        valeur compris entre 0 et 1 qui represente l'albedo simple.
     g : float or (float,float)
-        Soit valeur compris entre -1 et 1 qui represent le parametre d'asymetrie 
+        Soit valeur compris entre -1 et 1 qui represente le parametre d'asymetrie 
         ou un Tuple contenant p_bas,bas et p_haut,haut compris entre 0 et 1.
     typ: string 
         Un format String conforme a la documentation Mathplotlib. The default is 'r-'.
@@ -281,9 +281,9 @@ def arc_en_ceil(Fbas_init, Fhaut_init,g,longeur_onde,tau_max=20):
     Parameters
     ----------
     Fbas_init : float
-        La valeur initial de Fbas. Compris entre 0 et 1.
+        La valeur initiale de Fbas. Compris entre 0 et 1.
     Fhaut_init : float
-        La valeur initial de Fhaut. Compris entre 0 et 1.
+        La valeur initiale de Fhaut. Compris entre 0 et 1.
     g : float or (float,float)
         Soit valeur compris entre -1 et 1 qui represent le parametre d'asymetrie 
         ou un Tuple contenant p_bas,bas et p_haut,haut compris entre 0 et 1.
@@ -303,38 +303,38 @@ def arc_en_ceil(Fbas_init, Fhaut_init,g,longeur_onde,tau_max=20):
          
 def point_final (Fbas_init, Fhaut_init, w, g, seuil_max=1, seuil_min=0, resolution=1000, tau_min=0, tau_max=20):
     """
-    Cette fonction permet de trouver le point sur une solution particulier qui dépasse un certain seuil de Fhaut
+    Cette fonction permet de trouver le point sur une solution particuliere qui dépasse un certain seuil de Fhaut
 
     Parameters
     ----------
     Fbas_init : float
-        La valeur initial de Fbas. Compris entre 0 et 1.
+        La valeur initiale de Fbas. Compris entre 0 et 1.
     Fhaut_init : float
-        La valeur initial de Fhaut. Compris entre 0 et 1.
+        La valeur initiale de Fhaut. Compris entre 0 et 1.
     w : float
-        valeur compris entre 0 et 1 qui represent l'albedo simple.
+        valeur compris entre 0 et 1 qui represente l'albedo simple.
     g : float or (float,float)
-        Soit valeur compris entre -1 et 1 qui represent le parametre d'asymetrie 
+        Soit valeur compris entre -1 et 1 qui represente le parametre d'asymetrie 
         ou un Tuple contenant p_bas,bas et p_haut,haut compris entre 0 et 1.
     seuil_max : float, optional
-        Le seuil supérieur au-delà duquel on arrêt la solution. The default is 1.
+        Le seuil supérieur au-delà duquel on arrête la solution. The default is 1.
     seuil_min : float, optional
-        Le seuil inférieur en dessous duquel on arrêt la solution. The default is 0.
+        Le seuil inférieur en dessous duquel on arrête la solution. The default is 0.
     resolution : int, optional
         Le nombre de point qui seront tracer pour la solution particuliaire. The default is 1000.
     tau_min : int, optional
-        La valuer initial pour la derivation par tau, l'epaiseur optique. The default is 0.
+        La valuer initiale pour la derivation par tau, l'epaiseur optique. The default is 0.
     tau_max : int, optional
         La valuer final pour la derivation par tau, l'epaiseur optique. The default is 20.
 
     Returns
     -------
     tau : float
-        La valeur de tau au seuil où on arrêt la solution.
+        La valeur de tau au seuil où on arrête la solution.
     Fbas : float
-        La valeur de Fbas au seuil où on arrêt la solution.
+        La valeur de Fbas au seuil où on arrête la solution.
     Fhaut : float
-        La valeur de Fhaut au seuil où on arrêt la solution.
+        La valeur de Fhaut au seuil où on arrête la solution.
 
     """
     
@@ -364,13 +364,13 @@ def point_final (Fbas_init, Fhaut_init, w, g, seuil_max=1, seuil_min=0, resoluti
 
 # %% w=0 Figure 4
 
-w, g, Fbas_init, Fhaut_init=0, 0, 1, 0.2 #definition des parametre de cette figure
+w, g, Fbas_init, Fhaut_init=0, 0, 1, 0.2 #definition des parametres de cette figure
 fig = plt.figure(figsize = (12, 7))  #creation du fond de la figure
-mise_en_forme()   #mise en forme des axe et des legende  
+mise_en_forme()   #mise en forme des axes et des legendes  
 graph_des_phase(w, g)    #Crée le portrait de phase 
-solution_particuliere(Fbas_init, Fhaut_init, w, g)  #permet de tracer une solution particulier qui part de Fbas_init, Fhaut_init
-vecteur_propre(w, g) #permet de tracer les vecteur propre de la matrice
-tau_final, Fbas_final, Fhaut_final = point_final(Fbas_init, Fhaut_init, w, g) #on recupére les cordonné du point final
+solution_particuliere(Fbas_init, Fhaut_init, w, g)  #permet de tracer une solution particuliere qui part de Fbas_init, Fhaut_init
+vecteur_propre(w, g) #permet de tracer les vecteurs propre de la matrice
+tau_final, Fbas_final, Fhaut_final = point_final(Fbas_init, Fhaut_init, w, g) #on recupére les cordonnés du point final
 point_particulier(Fbas_init, Fhaut_init, w, g, tau_final) #on trace le point final
 
 #on crée la legende du graphe
@@ -380,7 +380,7 @@ plt.show()
 
 # %% w=1 Figure 5
 
-w, g, Fbas_init, Fhaut_init=1, 0, 1, 0.5  #definition des parametre de cette figure
+w, g, Fbas_init, Fhaut_init=1, 0, 1, 0.5  #definition des parametres de cette figure
 fig = plt.figure(figsize = (12, 7)) #creation du fond de la figure
 mise_en_forme()   #mise en forme des axe et des legende
 graph_des_phase(w, g)    #Crée le portrait de phase 
@@ -396,13 +396,13 @@ plt.show()
 
 # %% w=0.7 Figure 6
 
-w, g, Fbas_init, Fhaut_init=0.7, 0.2, 1, 0.5  #definition des parametre de cette figure
+w, g, Fbas_init, Fhaut_init=0.7, 0.2, 1, 0.5  #definition des parametres de cette figure
 fig = plt.figure(figsize = (12, 7)) #creation du fond de la figure
-mise_en_forme()   #mise en forme des axe et des legende
+mise_en_forme()   #mise en forme des axes et des legendes
 graph_des_phase(w, g)    #Crée le portrait de phase 
-solution_particuliere(Fbas_init, Fhaut_init, w, g) #permet de tracer une solution particulier qui part de Fbas_init, Fhaut_init
-vecteur_propre(w, g) #permet de tracer les vecteur propre de la matrice
-tau, Fbas_final, Fhaut_final = point_final(Fbas_init, Fhaut_init, w, g, tau_max=1.25 ) #on recupére les cordonné du point qui correspond au schema
+solution_particuliere(Fbas_init, Fhaut_init, w, g) #permet de tracer une solution particuliere qui part de Fbas_init, Fhaut_init
+vecteur_propre(w, g) #permet de tracer les vecteurs propre de la matrice
+tau, Fbas_final, Fhaut_final = point_final(Fbas_init, Fhaut_init, w, g, tau_max=1.25 ) #on recupére les cordonnés du point qui correspond au schema
 point_particulier(Fbas_init, Fhaut_init, w, g, tau) #on trace le point qui correspond au schema
 
 #on crée la legende du graphe
@@ -412,11 +412,11 @@ plt.show()
 
 # %% non-iso Figure 7
 
-w,g=0.7,(0.3,0.9)  #definition des parametre de cette figure
+w,g=0.7,(0.3,0.9)  #definition des parametres de cette figure
 fig = plt.figure(figsize = (12, 7)) #creation du fond de la figure
-mise_en_forme()   #mise en forme des axe et des legende
+mise_en_forme()   #mise en forme des axes et des legendes
 graph_des_phase(w, g)    #Crée le portrait de phase 
-solution_particuliere(1, 0.6, w, g) #permet de tracer une solution particulier qui part de Fbas_init, Fhaut_init
+solution_particuliere(1, 0.6, w, g) #permet de tracer une solution particuliere qui part de Fbas_init, Fhaut_init
 vecteur_propre(w, g) #permet de tracer les vecteur propre de la matrice
 
 #on crée la legende du graphe
@@ -426,13 +426,13 @@ plt.show()
 
 # %% conservation du volume Figure 8
 
-w, g, Fbas_init, Fhaut_init=0.7, 0.2, 0.75, 0.4  #definition des parametre de cette figure
+w, g, Fbas_init, Fhaut_init=0.7, 0.2, 0.75, 0.4  #definition des parametres de cette figure
 fig = plt.figure(figsize = (12, 7)) #creation du fond de la figure
-mise_en_forme()   #mise en forme des axe et des legende
+mise_en_forme()   #mise en forme des axes et des legendes
 graph_des_phase(w, g)    #Crée le portrait de phase 
 vecteur_propre(w, g) #permet de tracer les vecteur propre de la matrice
 
-#on trace les 8 point a tau=0
+#on trace les 8 points a tau=0
 for loop in range (3):
     for loop1 in range (3):
         if loop!=1 or loop1!=1: #on empeche le tracage du point central
@@ -451,11 +451,11 @@ plt.show()
 
 # %% non-conservation du volume Figure 9
 
-w, g, Fbas_init, Fhaut_init=0.7, (0.3,0.9), 0.75, 0.45  #definition des parametre de cette figure
+w, g, Fbas_init, Fhaut_init=0.7, (0.3,0.9), 0.75, 0.45  #definition des parametres de cette figure
 fig = plt.figure(figsize = (12, 7)) #creation du fond de la figure
-mise_en_forme()   #mise en forme des axe et des legende
+mise_en_forme()   #mise en forme des axes et des legendes
 graph_des_phase(w, g)    #Crée le portrait de phase 
-vecteur_propre(w, g) #permet de tracer les vecteur propre de la matrice
+vecteur_propre(w, g) #permet de tracer les vecteurs propre de la matrice
 
 #on trace les 8 point a tau=0
 for loop in range (3):
@@ -485,12 +485,12 @@ w_675=beta_675/(beta_675+kappa_675)
 
 
 fig = plt.figure(figsize = (12, 7)) #creation du fond de la figure
-mise_en_forme()   #mise en forme des axe et des legende
+mise_en_forme()   #mise en forme des axes et des legendes
 
-vecteur_propre(w_450, g,typ="black") #permet de tracer les vecteur propre de la matrice
+vecteur_propre(w_450, g,typ="black") #permet de tracer les vecteurs propre de la matrice
 graph_des_phase(w_450, g, "#1f77b4")
 
-#on trace les 6 solution particulier avec la bonne couleur
+#on trace les 6 solutiosn particuliere avec la bonne couleur
 solution_particuliere(1, 0.30, w_450, g, color=tuple([float(x/100) for x in wavelen2rgb(Liste_longeur_onde[Liste_longeur_onde.index(450)])]),tau_max=5*tau)
 solution_particuliere(1, 0.30, w_675, g, color=tuple([float(x/100) for x in wavelen2rgb(Liste_longeur_onde[Liste_longeur_onde.index(670)])]),tau_max=tau)
 solution_particuliere(1, 0.57, w_450, g, color=tuple([float(x/100) for x in wavelen2rgb(Liste_longeur_onde[Liste_longeur_onde.index(450)])]),tau_max=5*tau)
@@ -500,11 +500,11 @@ solution_particuliere(0, 0.50, w_675, g, color=tuple([float(x/100) for x in wave
 
  
 # %% nuage Figure 14
-"""graphe nuage"""
-w, g ,tau,Fbas_init, Fhaut_init= 0.8,-1, 0.75,1,0.6  #definition des parametre de cette figure
+
+w, g ,tau,Fbas_init, Fhaut_init= 0.8,-1, 0.75,1,0.6  #definition des parametres de cette figure
 fig = plt.figure(figsize = (12, 7)) #creation du fond de la figure
 graph_des_phase(w, g, "#1f77b4")  
-mise_en_forme()   #mise en forme des axe et des legende
+mise_en_forme()   #mise en forme des axes et des legendes
 
 #on hachure sur la partie du graphe interdite
 plt.fill_between([0,1], [0,1],[1,1],facecolor="w", hatch="/", edgecolor="k", linewidth=0.0,zorder=100)
@@ -512,9 +512,9 @@ plt.plot([0,1],[0,1],'k--')
 plt.plot([0,0,1],[0,1,1],'k-',zorder=101)
 
 
-vecteur_propre(w, g,'b') #permet de tracer les vecteur propre de la matrice en noir
-solution_particuliere(Fbas_init, Fhaut_init, w, g,tau_max=tau) #on trace notre solution particulier avec 
-tau,albedoX,albedoY=point_final(Fbas_init, Fhaut_init, w, g,tau_max=tau) #on recupere les cordoner du point final
+vecteur_propre(w, g,'b') #permet de tracer les vecteurs propre de la matrice en noir
+solution_particuliere(Fbas_init, Fhaut_init, w, g,tau_max=tau) #on trace notre solution particuliere avec 
+tau,albedoX,albedoY=point_final(Fbas_init, Fhaut_init, w, g,tau_max=tau) #on recupere les cordones du point final
 plt.plot([0,albedoX*3],[0,albedoY*3],color=(0,1,0),lw=4) #on trace la droite qui passe par l'originer et le point final
 plt.plot([albedoX,albedoX],[0,albedoY],'k--',lw=3) #on trace la ligne pointilleer qui relie le point final a l'absice
 
@@ -534,18 +534,18 @@ plt.show()
 
 fig = plt.figure(figsize = (12, 7)) #creation du fond de la figure
 
-#on met en forme les axe
+#on met en forme les axes
 plt.tick_params(labelsize=24)
 plt.ylabel(r'$\kappa\,(m^{-1})$', fontsize=30,  labelpad=20.0)
 plt.xlabel(r'$\lambda\,(nm)$', fontsize=30)
 
 ax1=plt.gca()
 plt.tick_params(labelsize=24)
-ax2 = ax1.twinx() #on crée le deuxime axe des ordonnée
+ax2 = ax1.twinx() #on crée le deuxime axe des ordonnées
 plt.ylabel(r'$\beta (m^{-1})$', fontsize=30,  labelpad=20.0)
 plt.tick_params(labelsize=24)
 
-#on crée les courbe de beta et de kappa
+#on crée les courbes de beta et de kappa
 kappa,=ax1.plot(Liste_longeur_onde,Liste_kappa,lw=4)
 beta,=ax2.plot(Liste_longeur_onde,Liste_beta,'r',lw=4)
 
@@ -555,25 +555,25 @@ plt.show()
 
 # %% arc en ciel eau z fixé Figure 10
 
-w, g, z= 0,-1, 50  #definition des parametre de cette figure
+w, g, z= 0,-1, 50  #definition des parametres de cette figure
 fig = plt.figure(figsize = (12, 7)) #creation du fond de la figure
-mise_en_forme()   #mise en forme des axe et des legende
-#in initialiser les liste qui permetrond de tracer les tau finaux
+mise_en_forme()   #mise en forme des axes et des legendes
+#in initialiser les listes qui permettront de tracer les tau finaux
 tau_final=[]
 Longeur_onde_trace=[]
-# on iter a traver la liste en tracant que les longeur d'onde qui on une couleur corsspondant
+# on iter a traver la liste en tracant que les longeurs d'onde qui on une couleur corsspondant
 for loop in range (len(Liste_longeur_onde)):
     if not(Liste_longeur_onde[loop]<400 or 780<Liste_longeur_onde[loop]):
         lamda=Liste_longeur_onde.index(Liste_longeur_onde[loop])
-        tau=z*(Liste_beta[lamda]+Liste_kappa[lamda]) #on calcule le tau associer a la longeur z pour cette longeur d'onde
+        tau=z*(Liste_beta[lamda]+Liste_kappa[lamda]) #on calcule le tau associe a la longeur z pour cette longeur d'onde
         arc_en_ceil(1, 0.2, g, Liste_longeur_onde[loop],tau)
         tau_final.append(tau)
         Longeur_onde_trace.append(Liste_longeur_onde[loop])
 
-#on trace le vecteur propre acosier a la plus petit longeur d'onde
+#on trace le vecteur propre associe a la plus petit longeur d'onde
 vecteur_propre(Liste_beta[Liste_longeur_onde.index(400)]/(Liste_beta[Liste_longeur_onde.index(400)] + Liste_kappa[Liste_longeur_onde.index(400)]), g,'k-') 
 
-# creation de la figure des tau final dans l'eau
+# creation de la figure des tau finaux dans l'eau
 fig = plt.figure(figsize = (12, 7)) #creation du fond de la figure     
 plt.plot(Longeur_onde_trace,tau_final)
 plt.ylabel(r'$\tau_{final}}$', fontsize=30)
