@@ -477,30 +477,27 @@ plt.show()
 
 
 # %% longeur d'onde aire figure 11
-w=0   #definition des parametre de cette figure
-g=0
-fig = plt.figure(figsize = (12, 7)) #creation du fond de la figure
-mise_en_forme()   #mise en forme des axe et des legende
-kappa_450=0.02
+w,g,kappa_450,beta_450,tau=0,0 ,0.02,0.1,0.25  #definition des parametre de cette figure
 kappa_675=kappa_450/5
-beta_450=0.1
 beta_675=beta_450/5
 w_450=beta_450/(beta_450+kappa_450)
 w_675=beta_675/(beta_675+kappa_675)
+
+
+fig = plt.figure(figsize = (12, 7)) #creation du fond de la figure
+mise_en_forme()   #mise en forme des axe et des legende
+
 vecteur_propre(w_450, g,typ="black") #permet de tracer les vecteur propre de la matrice
 graph_des_phase(w_450, g, "#1f77b4")
-tau=0.25
+
+#on trace les 6 solution particulier avec la bonne couleur
 solution_particuliere(1, 0.30, w_450, g, color=tuple([float(x/100) for x in wavelen2rgb(Liste_longeur_onde[Liste_longeur_onde.index(450)])]),tau_max=5*tau)
 solution_particuliere(1, 0.30, w_675, g, color=tuple([float(x/100) for x in wavelen2rgb(Liste_longeur_onde[Liste_longeur_onde.index(670)])]),tau_max=tau)
-tau_final, Fbas_final, Fhaut_final = point_final(1, 0.3, w_450, g,tau_max=5*tau)
-print("tau=",tau_final,"z=",tau_final/(beta_450+kappa_450))
-tau_final, Fbas_final, Fhaut_final = point_final(1, 0.3, w_675, g,tau_max=tau)
-print("tau=",tau_final,"z=",tau_final/(beta_675+kappa_675))
 solution_particuliere(1, 0.57, w_450, g, color=tuple([float(x/100) for x in wavelen2rgb(Liste_longeur_onde[Liste_longeur_onde.index(450)])]),tau_max=5*tau)
 solution_particuliere(1, 0.57, w_675, g, color=tuple([float(x/100) for x in wavelen2rgb(Liste_longeur_onde[Liste_longeur_onde.index(670)])]),tau_max=tau)
 solution_particuliere(0, 0.50, w_450, g, color=tuple([float(x/100) for x in wavelen2rgb(Liste_longeur_onde[Liste_longeur_onde.index(450)])]),tau_max=5*tau)
 solution_particuliere(0, 0.50, w_675, g, color=tuple([float(x/100) for x in wavelen2rgb(Liste_longeur_onde[Liste_longeur_onde.index(670)])]),tau_max=tau)
-print(w_450,w_675)
+
  
 # %% nuage Figure 14
 """graphe nuage"""
