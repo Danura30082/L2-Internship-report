@@ -6,6 +6,7 @@ Created on Mon May 22 10:43:22 2023
 # Import libraries
 import numpy as np
 import matplotlib.pyplot as plt
+#import matplotlib.patches as ptch
 from scipy.integrate import solve_ivp
 from wavelen2rgb import wavelen2rgb #importer de http://www.johnny-lin.com/py_refs/wavelen2rgb.html
 
@@ -93,16 +94,16 @@ def modelflux(tau, Fbas_Fhaut,w,g):
         Vecteur composer de Fbas' et de Fhaut'.
 
     """
-    
+    Fbas, Fhaut= Fbas_Fhaut
     if type(g)==tuple:
         a,b,c,d=calcul_a_b_c_d_non_Isotrope(w, g)
+        return [ a*Fbas+b*Fhaut, c*Fbas+d*Fhaut]
     else:
         a,b = calcul_a_b_Isotrope(w, g)
-    Fbas, Fhaut= Fbas_Fhaut
-    return [ -a*Fbas+b*Fhaut, -b*Fbas+a*Fhaut]
+        return [ -a*Fbas+b*Fhaut, -b*Fbas+a*Fhaut]
 
 
-def graph_des_phase(w, g, color="black"):
+def graph_des_phase(w, g, color="#1f77b4"):
     """
     Génère le diagrame de phase 
 
@@ -133,39 +134,6 @@ def graph_des_phase(w, g, color="black"):
     
     #tracage du digramme des phases
     plt.streamplot(X, Y, U, V, density = 1,arrowsize=3,color=color)
-
-def graph_des_phase_nuage(Fbas_init, w, g, color="black"):
-    """
-    Génère le diagrame de phase 
-
-    Parameters
-    ----------
-    w : float
-        valeur compris entre 0 et 1 qui represent l'albedo simple.
-    g : float or (float,float)
-        Soit valeur compris entre -1 et 1 qui represent le parametre d'asymetrie 
-        ou un Tuple contenant p_bas,bas et p_haut,haut compris entre 0 et 1.
-    color: string or (float,float,float)
-        un argument couleur de mathplotlib ou une valeur RVB. The default is "black".
-    Returns
-    -------
-    None.
-
-    """
-    #creation des parametres de streamplot
-    Y, X = np.mgrid[0:1:200j, 0:1:200j] 
-    if type(g)==tuple:
-        a,b,c,d=calcul_a_b_c_d_non_Isotrope(w, g)
-        U = (a*X+b*Y)/Fbas_init
-        V = (c*X+d*Y)
-        print("here")
-    else:
-        a,b = calcul_a_b_Isotrope(w, g)
-        U = (-a*X+b*Y)/Fbas_init
-        V = (-b*X+a*Y)/Fbas_init
-    
-    #tracage du digramme des phases
-    plt.streamplot(X, Y, U, V, density = 1,arrowsize=3,color=color,zorder=-1)
 
 def solution_particuliere (Fbas_init, Fhaut_init, w, g, color="black", resolution=1000, tau_min=0, tau_max=20):
     """
@@ -203,7 +171,7 @@ def solution_particuliere (Fbas_init, Fhaut_init, w, g, color="black", resolutio
 
     #tracage de la solution particuliere
     plt.plot(solution.y[0], solution.y[1], '-',color=color, lw=3)
-
+    
 
 def point_particulier(Fbas_init, Fhaut_init, w, g, tau=0, resolution=1000, tau_min=0, tau_max=20):
     """
@@ -268,13 +236,22 @@ def vecteur_propre(w,g,typ='r-'):
         a,b = calcul_a_b_Isotrope(w, g)
         e=(g+1)/2
         f=e
-    
-    x_v1 = [0, -(2 - e*w - f*w + np.sqrt(4 - 4*e*w - 4*f*w - 4*(w**2) + 4*e*(w**2) + (e**2)*(w**2) + 4*f*(w**2) - 2*e*f*(w**2) + (f**2)*(w**2)))/(2*(-1 + e)*w)]
-    y_v1 = [0, 1]
-    x_v2 = [0,-(2 - e*w - f*w - np.sqrt(4 - 4*e*w - 4*f*w - 4*(w**2) + 4*e*(w**2) + (e**2)*(w**2) + 4*f*(w**2) - 2*e*f*(w**2) + (f**2)*(w**2)))/(2*(-1 + e)*w)]
-    y_v2 = [0, 1]
-    plt.plot(x_v1,y_v1,typ,lw=4,zorder=0)
-    plt.plot(x_v2,y_v2,typ,lw=4,zorder=0)
+    if w!=0:# empeche la division pas 0
+        x_v1 = [0, -(2 - e*w - f*w + np.sqrt(4 - 4*e*w - 4*f*w - 4*(w**2) + 4*e*(w**2) + (e**2)*(w**2) + 4*f*(w**2) - 2*e*f*(w**2) + (f**2)*(w**2)))/(2*(-1 + e)*w)]
+        y_v1 = [0, 1]
+        x_v2 = [0,-(2 - e*w - f*w - np.sqrt(4 - 4*e*w - 4*f*w - 4*(w**2) + 4*e*(w**2) + (e**2)*(w**2) + 4*f*(w**2) - 2*e*f*(w**2) + (f**2)*(w**2)))/(2*(-1 + e)*w)]
+        y_v2 = [0, 1]
+    elif type(g)!=tuple:
+        alpha = np.sqrt(a**2 - b**2)
+        x_v1 = [0, b*3]
+        y_v1 = [0, (a+alpha)*3]
+        y_v2=x_v1
+        x_v2=y_v1
+    else:
+        print("ERROR: w=0 et cas non isotrope pas supporté")
+        return
+    plt.plot(x_v1,y_v1,typ,lw=4)
+    plt.plot(x_v2,y_v2,typ,lw=4)
     
 
 def mise_en_forme():
@@ -292,15 +269,12 @@ def mise_en_forme():
     plt.tick_params(labelsize=24)
     plt.xlim(0,1)
     plt.ylim(0,1)
-    plt.ylabel(r'$\frac{F_{\!\uparrow}}{F_{\!\downarrow\!0}}$', fontsize=40,  rotation='horizontal',labelpad=20.0 ,y=0.6)
-    plt.xlabel(r'$\frac{F_{\!\downarrow}}{F_{\!\downarrow\!0}}$', fontsize=40,labelpad=-15.0)
+    plt.ylabel(r'$F_{\!\uparrow}$', fontsize=30,  rotation='horizontal',labelpad=20.0 ,y=0.45)
+    plt.xlabel(r'$F_{\!\downarrow}$', fontsize=30,labelpad=-15.0)
     plt.xticks(np.linspace(0,1,6),label)
     plt.yticks(np.linspace(0,1,6),label)
-    ax=plt.gca()
-    ax.yaxis.tick_right()
-    ax.yaxis.set_label_position("right")
 
-def arc_en_ceil(Fbas_init, Fhaut_init,g,longeur_onde):
+def arc_en_ceil(Fbas_init, Fhaut_init,g,longeur_onde,tau_max=20):
     """
     Permet de tracer une solution particulier pour un w corespondant a une certain longeru d'onde.
 
@@ -325,7 +299,7 @@ def arc_en_ceil(Fbas_init, Fhaut_init,g,longeur_onde):
     if not(longeur_onde<380 or 780<longeur_onde):
         lamda=Liste_longeur_onde.index(longeur_onde)
         w=Liste_beta[lamda]/(Liste_beta[lamda]+Liste_kappa[lamda])
-        solution_particuliere(Fbas_init, Fhaut_init, w, g, color=tuple([float(x/100) for x in wavelen2rgb(Liste_longeur_onde[lamda])]))
+        solution_particuliere(Fbas_init, Fhaut_init, w, g, color=tuple([float(x/100) for x in wavelen2rgb(Liste_longeur_onde[lamda])]),tau_max=tau_max)
          
 def point_final (Fbas_init, Fhaut_init, w, g, seuil_max=1, seuil_min=0, resolution=1000, tau_min=0, tau_max=20):
     """
@@ -388,83 +362,223 @@ def point_final (Fbas_init, Fhaut_init, w, g, seuil_max=1, seuil_min=0, resoluti
     tau=solution.t[endpoint]
     return tau, Fbas , Fhaut
 
+# %% w=0 Figure 4
 
-#definiton des variable global
+w, g, Fbas_init, Fhaut_init=0, 0, 1, 0.2 #definition des parametre de cette figure
+fig = plt.figure(figsize = (12, 7))  #creation du fond de la figure
+mise_en_forme()   #mise en forme des axe et des legende  
+graph_des_phase(w, g)    #Crée le portrait de phase 
+solution_particuliere(Fbas_init, Fhaut_init, w, g)  #permet de tracer une solution particulier qui part de Fbas_init, Fhaut_init
+vecteur_propre(w, g) #permet de tracer les vecteur propre de la matrice
+tau_final, Fbas_final, Fhaut_final = point_final(Fbas_init, Fhaut_init, w, g) #on recupére les cordonné du point final
+point_particulier(Fbas_init, Fhaut_init, w, g, tau_final) #on trace le point final
 
-w=0.9 #definition de l'albedo simple
-g=-1 #definition du parametre d'asymetrie
+#on crée la legende du graphe
+legende="Avec w=" + str(w) + " et g=" + str(g) +". Pour " + r'$\tau=$' + str(round(tau_final,2)) + ", " + r'$F_{\!\downarrow}=$' + str(round(Fbas_final,1)) + " et " + r'$F_{\!\uparrow}=$'+str(round(Fhaut_final,1))  
+plt.text(.5, -0.25, legende, fontsize=24, color='black', ha='center')
+plt.show()
 
-# creation de la figure
-fig = plt.figure(figsize = (12, 7))
-mise_en_forme()
+# %% w=1 Figure 5
 
-"""arc en ceil"""
-tau_final=[]
-w_final=[]
-z_final=[]
+w, g, Fbas_init, Fhaut_init=1, 0, 1, 0.5  #definition des parametre de cette figure
+fig = plt.figure(figsize = (12, 7)) #creation du fond de la figure
+mise_en_forme()   #mise en forme des axe et des legende
+graph_des_phase(w, g)    #Crée le portrait de phase 
+solution_particuliere(Fbas_init, Fhaut_init, w, g) #permet de tracer une solution particulier qui part de Fbas_init, Fhaut_init
+vecteur_propre(w, g) #permet de tracer les vecteur propre de la matrice
+tau_final, Fbas_final, Fhaut_final = point_final(Fbas_init, Fhaut_init, w, g) #on recupére les cordonné du point final
+point_particulier(Fbas_init, Fhaut_init, w, g, tau_final) #on trace le point final
 
-for loop in range (len(Liste_longeur_onde)):
-    if not(Liste_longeur_onde[loop]<400 or 780<Liste_longeur_onde[loop]):
-        arc_en_ceil(1, 0.00008, g, Liste_longeur_onde[loop])
-        lamda=Liste_longeur_onde.index(Liste_longeur_onde[loop])
-        w=Liste_beta[lamda]/(Liste_beta[lamda]+Liste_kappa[lamda])
-        tau_final.append(round(point_final(1, 0.2, w, g)[0],2))
-        w_final.append(w)
-        z_final.append((point_final(1, 0.2, w, g)[0])/(Liste_beta[lamda]+Liste_kappa[lamda]))
-lamda=Liste_longeur_onde.index(400)
-w=Liste_beta[lamda]/(Liste_beta[lamda]+Liste_kappa[lamda])
-vecteur_propre(w, g,'k-')
-lamda=Liste_longeur_onde.index(780)
-w=Liste_beta[lamda]/(Liste_beta[lamda]+Liste_kappa[lamda])
-vecteur_propre(w, g,'k-')
-print(tau_final)
-plt.ylim(0,0.0001)
+#on crée la legende du graphe
+legende="Avec w=" + str(w) + " et g=" + str(g) +". Pour " + r'$\tau=$' + str(round(tau_final,2)) + ", " + r'$F_{\!\downarrow}=$' + str(round(Fbas_final,1)) + " et " + r'$F_{\!\uparrow}=$'+str(round(Fhaut_final,1))  
+plt.text(.5, -0.25, legende, fontsize=24, color='black', ha='center')
+plt.show()
 
-"""Longeur d'onde aire"""
-# kappa_450=0.02
-# kappa_675=kappa_450/5
-# beta_450=0.1
-# beta_675=beta_450/5
-# w_450=beta_450/(beta_450+kappa_450)
-# w_675=beta_675/(beta_675+kappa_675)
-# vecteur_propre(w_450, g,typ="black")
-# vecteur_propre(w_675, g,typ="black")
-# graph_des_phase(w_450, g, "#1f77b4")
-# tau=0.25
-# solution_particuliere(1, 0.30, w_450, g, color=tuple([float(x/100) for x in wavelen2rgb(Liste_longeur_onde[Liste_longeur_onde.index(450)])]),tau_max=5*tau)
-# solution_particuliere(1, 0.30, w_675, g, color=tuple([float(x/100) for x in wavelen2rgb(Liste_longeur_onde[Liste_longeur_onde.index(670)])]),tau_max=tau)
-# solution_particuliere(1, 0.57, w_450, g, color=tuple([float(x/100) for x in wavelen2rgb(Liste_longeur_onde[Liste_longeur_onde.index(450)])]),tau_max=5*tau)
-# solution_particuliere(1, 0.57, w_675, g, color=tuple([float(x/100) for x in wavelen2rgb(Liste_longeur_onde[Liste_longeur_onde.index(670)])]),tau_max=tau)
-# solution_particuliere(0, 0.50, w_450, g, color=tuple([float(x/100) for x in wavelen2rgb(Liste_longeur_onde[Liste_longeur_onde.index(450)])]),tau_max=5*tau)
-# solution_particuliere(0, 0.50, w_675, g, color=tuple([float(x/100) for x in wavelen2rgb(Liste_longeur_onde[Liste_longeur_onde.index(670)])]),tau_max=tau)
-# point_particulier(1, 0.15, w_450, g, 0.40040040040040037)
-# print (point_final(1, 0.15, w_450, g))
-# print (point_final(1, 0.15, w_675, g))
-# print(w_450,w_675)
+# %% w=0.7 Figure 6
+
+w, g, Fbas_init, Fhaut_init=0.7, 0.2, 1, 0.5  #definition des parametre de cette figure
+fig = plt.figure(figsize = (12, 7)) #creation du fond de la figure
+mise_en_forme()   #mise en forme des axe et des legende
+graph_des_phase(w, g)    #Crée le portrait de phase 
+solution_particuliere(Fbas_init, Fhaut_init, w, g) #permet de tracer une solution particulier qui part de Fbas_init, Fhaut_init
+vecteur_propre(w, g) #permet de tracer les vecteur propre de la matrice
+tau, Fbas_final, Fhaut_final = point_final(Fbas_init, Fhaut_init, w, g, tau_max=1.25 ) #on recupére les cordonné du point qui correspond au schema
+point_particulier(Fbas_init, Fhaut_init, w, g, tau) #on trace le point qui correspond au schema
+
+#on crée la legende du graphe
+legende="Avec w=" + str(w) + " et g=" + str(g) +". Pour " + r'$\tau=$' + str(round(tau_final,2)) + ", " + r'$F_{\!\downarrow}=$' + str(round(Fbas_final,2)) + " et " + r'$F_{\!\uparrow}=$'+str(round(Fhaut_final,2))  
+plt.text(.5, -0.25, legende, fontsize=24, color='black', ha='center')
+plt.show()
+
+# %% non-iso Figure 7
+
+w,g=0.7,(0.3,0.9)  #definition des parametre de cette figure
+fig = plt.figure(figsize = (12, 7)) #creation du fond de la figure
+mise_en_forme()   #mise en forme des axe et des legende
+graph_des_phase(w, g)    #Crée le portrait de phase 
+solution_particuliere(1, 0.6, w, g) #permet de tracer une solution particulier qui part de Fbas_init, Fhaut_init
+vecteur_propre(w, g) #permet de tracer les vecteur propre de la matrice
+
+#on crée la legende du graphe
+legende="Avec w=" + str(w) + " et pour " + r'$p_{\!\downarrow\!\downarrow}=$' + str(g[0]) +", "+r'$p_{\!\uparrow\!\uparrow}=$'+str(g[1]) 
+plt.text(.5, -0.25, legende, fontsize=24, color='black', ha='center')
+plt.show()
+
+# %% conservation du volume Figure 8
+
+w, g, Fbas_init, Fhaut_init=0.7, 0.2, 0.75, 0.4  #definition des parametre de cette figure
+fig = plt.figure(figsize = (12, 7)) #creation du fond de la figure
+mise_en_forme()   #mise en forme des axe et des legende
+graph_des_phase(w, g)    #Crée le portrait de phase 
+vecteur_propre(w, g) #permet de tracer les vecteur propre de la matrice
+
+#on trace les 8 point a tau=0
+for loop in range (3):
+    for loop1 in range (3):
+        if loop!=1 or loop1!=1: #on empeche le tracage du point central
+            point_particulier(Fbas_init+loop1/10, Fhaut_init+loop/10, w, g)
+            
+#on trace les 8 point a tau=1.25  
+for loop in range (3):
+    for loop1 in range (3):
+        if loop!=1 or loop1!=1: #on empeche le tracage du point central
+            point_particulier(Fbas_init+loop1/10, Fhaut_init+loop/10, w, g,1.25)
+            
+#on crée la legende du graphe
+legende="Avec w=" + str(w) + " et g=" + str(g) 
+plt.text(.5, -0.25, legende, fontsize=24, color='black', ha='center')
+plt.show()
+
+# %% non-conservation du volume Figure 9
+
+w, g, Fbas_init, Fhaut_init=0.7, (0.3,0.9), 0.75, 0.45  #definition des parametre de cette figure
+fig = plt.figure(figsize = (12, 7)) #creation du fond de la figure
+mise_en_forme()   #mise en forme des axe et des legende
+graph_des_phase(w, g)    #Crée le portrait de phase 
+vecteur_propre(w, g) #permet de tracer les vecteur propre de la matrice
+
+#on trace les 8 point a tau=0
+for loop in range (3):
+    for loop1 in range (3):
+        if loop!=1 or loop1!=1:  #on empeche le tracage du point central
+            point_particulier(Fbas_init+loop1/10, Fhaut_init+loop/10, w, g)
+
+
+#on trace les 8 point a tau=2  
+for loop in range (3):
+    for loop1 in range (3):
+        if loop!=1 or loop1!=1:  #on empeche le tracage du point central
+            point_particulier(Fbas_init+loop1/10, Fhaut_init+loop/10, w, g,2)
+            
+#on crée la legende du graphe
+legende="Avec w=" + str(w) + " et pour " + r'$p_{\!\downarrow\!\downarrow}=$' + str(g[0]) +", "+r'$p_{\!\uparrow\!\uparrow}=$'+str(g[1]) 
+plt.text(.5, -0.25, legende, fontsize=24, color='black', ha='center')
+plt.show()
+
+
+# %% longeur d'onde aire figure 11
+w=0   #definition des parametre de cette figure
+g=0
+fig = plt.figure(figsize = (12, 7)) #creation du fond de la figure
+mise_en_forme()   #mise en forme des axe et des legende
+kappa_450=0.02
+kappa_675=kappa_450/5
+beta_450=0.1
+beta_675=beta_450/5
+w_450=beta_450/(beta_450+kappa_450)
+w_675=beta_675/(beta_675+kappa_675)
+vecteur_propre(w_450, g,typ="black") #permet de tracer les vecteur propre de la matrice
+graph_des_phase(w_450, g, "#1f77b4")
+tau=0.25
+solution_particuliere(1, 0.30, w_450, g, color=tuple([float(x/100) for x in wavelen2rgb(Liste_longeur_onde[Liste_longeur_onde.index(450)])]),tau_max=5*tau)
+solution_particuliere(1, 0.30, w_675, g, color=tuple([float(x/100) for x in wavelen2rgb(Liste_longeur_onde[Liste_longeur_onde.index(670)])]),tau_max=tau)
+tau_final, Fbas_final, Fhaut_final = point_final(1, 0.3, w_450, g,tau_max=5*tau)
+print("tau=",tau_final,"z=",tau_final/(beta_450+kappa_450))
+tau_final, Fbas_final, Fhaut_final = point_final(1, 0.3, w_675, g,tau_max=tau)
+print("tau=",tau_final,"z=",tau_final/(beta_675+kappa_675))
+solution_particuliere(1, 0.57, w_450, g, color=tuple([float(x/100) for x in wavelen2rgb(Liste_longeur_onde[Liste_longeur_onde.index(450)])]),tau_max=5*tau)
+solution_particuliere(1, 0.57, w_675, g, color=tuple([float(x/100) for x in wavelen2rgb(Liste_longeur_onde[Liste_longeur_onde.index(670)])]),tau_max=tau)
+solution_particuliere(0, 0.50, w_450, g, color=tuple([float(x/100) for x in wavelen2rgb(Liste_longeur_onde[Liste_longeur_onde.index(450)])]),tau_max=5*tau)
+solution_particuliere(0, 0.50, w_675, g, color=tuple([float(x/100) for x in wavelen2rgb(Liste_longeur_onde[Liste_longeur_onde.index(670)])]),tau_max=tau)
+print(w_450,w_675)
  
-"""graphe de base"""
-# vecteur_propre(w, g)
-# graph_des_phase(w, g, "#1f77b4")
-# solution_particuliere(1, 0.5, w, g)
-# point_particulier(1, 0.5, w, g, 1.25)
-
+# %% nuage Figure 14
 """graphe nuage"""
-#graph_des_phase(w, g, "#1f77b4")  
-# graph_des_phase_nuage(0.4, w, g, "#1f77b4")
-# plt.fill_between([0,1], [0,1],[1,1],facecolor="w", hatch="/", edgecolor="k", linewidth=0.0)
-# plt.plot([0,1],[0,1],'k--')
-# vecteur_propre(w, g,'b')
-# solution_particuliere(1, 0.6, w, g,tau_max=1.5)
-# tau,albedoX,albedoY=point_final(1, 0.6, w, g,tau_max=1.5)
-#plt.plot([0,albedoX*3],[0,albedoY*3],color=(0,1,0),lw=4)
+w, g ,tau,Fbas_init, Fhaut_init= 0.8,-1, 0.75,1,0.6  #definition des parametre de cette figure
+fig = plt.figure(figsize = (12, 7)) #creation du fond de la figure
+graph_des_phase(w, g, "#1f77b4")  
+mise_en_forme()   #mise en forme des axe et des legende
+
+#on hachure sur la partie du graphe interdite
+plt.fill_between([0,1], [0,1],[1,1],facecolor="w", hatch="/", edgecolor="k", linewidth=0.0,zorder=100)
+plt.plot([0,1],[0,1],'k--')
+plt.plot([0,0,1],[0,1,1],'k-',zorder=101)
+
+
+vecteur_propre(w, g,'b') #permet de tracer les vecteur propre de la matrice en noir
+solution_particuliere(Fbas_init, Fhaut_init, w, g,tau_max=tau) #on trace notre solution particulier avec 
+tau,albedoX,albedoY=point_final(Fbas_init, Fhaut_init, w, g,tau_max=tau) #on recupere les cordoner du point final
+plt.plot([0,albedoX*3],[0,albedoY*3],color=(0,1,0),lw=4) #on trace la droite qui passe par l'originer et le point final
+plt.plot([albedoX,albedoX],[0,albedoY],'k--',lw=3) #on trace la ligne pointilleer qui relie le point final a l'absice
+
+#on change la mise en forme des axe
+plt.ylabel(r'$\frac{F_{\!\uparrow}}{F_{\!\downarrow\!0}}$', fontsize=40,  rotation='horizontal',labelpad=20.0 ,y=0.6)
+plt.xlabel(r'$\frac{F_{\!\downarrow}}{F_{\!\downarrow\!0}}$', fontsize=40,labelpad=-15.0)
+ax=plt.gca()
+ax.yaxis.tick_right()
+ax.yaxis.set_label_position("right")
+
+#plt.text()
 
 # montrer la figure
 plt.show()
 
-fig = plt.figure(figsize = (12, 7))
+# %% Beta Kappa Figure 10
+
+fig = plt.figure(figsize = (12, 7)) #creation du fond de la figure
+
+#on met en forme les axe
+plt.tick_params(labelsize=24)
+plt.ylabel(r'$\kappa\,(m^{-1})$', fontsize=30,  labelpad=20.0)
+plt.xlabel(r'$\lambda\,(nm)$', fontsize=30)
+
 ax1=plt.gca()
-ax2 = ax1.twinx()
-ax1.plot(Liste_longeur_onde,Liste_kappa)
-ax2.plot(Liste_longeur_onde,Liste_beta)
+plt.tick_params(labelsize=24)
+ax2 = ax1.twinx() #on crée le deuxime axe des ordonnée
+plt.ylabel(r'$\beta (m^{-1})$', fontsize=30,  labelpad=20.0)
+plt.tick_params(labelsize=24)
 
+#on crée les courbe de beta et de kappa
+kappa,=ax1.plot(Liste_longeur_onde,Liste_kappa,lw=4)
+beta,=ax2.plot(Liste_longeur_onde,Liste_beta,'r',lw=4)
 
+#on cree la legende
+ax1.legend([kappa,beta],[r'$\kappa$',r'$\beta $'],fontsize="20",loc=9)
+plt.show()
+
+# %% arc en ciel eau z fixé Figure 10
+
+w, g, z= 0,-1, 50  #definition des parametre de cette figure
+fig = plt.figure(figsize = (12, 7)) #creation du fond de la figure
+mise_en_forme()   #mise en forme des axe et des legende
+#in initialiser les liste qui permetrond de tracer les tau finaux
+tau_final=[]
+Longeur_onde_trace=[]
+# on iter a traver la liste en tracant que les longeur d'onde qui on une couleur corsspondant
+for loop in range (len(Liste_longeur_onde)):
+    if not(Liste_longeur_onde[loop]<400 or 780<Liste_longeur_onde[loop]):
+        lamda=Liste_longeur_onde.index(Liste_longeur_onde[loop])
+        tau=z*(Liste_beta[lamda]+Liste_kappa[lamda]) #on calcule le tau associer a la longeur z pour cette longeur d'onde
+        arc_en_ceil(1, 0.2, g, Liste_longeur_onde[loop],tau)
+        tau_final.append(tau)
+        Longeur_onde_trace.append(Liste_longeur_onde[loop])
+
+#on trace le vecteur propre acosier a la plus petit longeur d'onde
+vecteur_propre(Liste_beta[Liste_longeur_onde.index(400)]/(Liste_beta[Liste_longeur_onde.index(400)] + Liste_kappa[Liste_longeur_onde.index(400)]), g,'k-') 
+
+# creation de la figure des tau final dans l'eau
+fig = plt.figure(figsize = (12, 7)) #creation du fond de la figure     
+plt.plot(Longeur_onde_trace,tau_final)
+plt.ylabel(r'$\tau_{final}}$', fontsize=30)
+plt.xlabel(r'$\lambda (nm)$', fontsize=30)
+plt.tick_params(labelsize=24)
