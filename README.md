@@ -1,2 +1,2 @@
-# Code-stage-L2
-This repo serves as a host to share my code from my second year internship
+# L2-Internship-report
+This was the report and code I created for my second year internship
